@@ -1,0 +1,360 @@
+Microsoft Windows [Version 10.0.19045.4170]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Program Files\MySQL\MySQL Server 8.0>mysql -u root -p
+Enter password: ********
+ERROR 1045 (28000): Access denied for user 'root'@'localhost' (using password: YES)
+
+C:\Program Files\MySQL\MySQL Server 8.0>mysql -u root -p
+Enter password: *********
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 9
+Server version: 8.0.36 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| joins              |
+| mapdb              |
+| my_db              |
+| mysql              |
+| performance_schema |
+| practice           |
+| spring_orm         |
+| sys                |
++--------------------+
+9 rows in set (0.02 sec)
+
+mysql> use database joins;
+ERROR 1049 (42000): Unknown database 'database'
+mysql> use joins;
+Database changed
+mysql> show tables;
++-----------------+
+| Tables_in_joins |
++-----------------+
+| customers       |
+| orders          |
++-----------------+
+2 rows in set (0.02 sec)
+
+mysql> select * from customers;
++------------+--------------+-------------+-----------+
+| customerid | customername | contactname | address   |
++------------+--------------+-------------+-----------+
+|          2 | rrr          | rajesh      | hyderabad |
+|          1 | ppp          | pranav      | delhi     |
+|          3 | kkk          | karthik     | banglore  |
+|          4 | mmm          | manas       | mumbai    |
++------------+--------------+-------------+-----------+
+4 rows in set (0.03 sec)
+
+mysql> select * from orders;
++---------+------------+------------+
+| orderid | customerid | shippingid |
++---------+------------+------------+
+|      10 |          1 |         50 |
+|      11 |          2 |         53 |
+|      12 |          8 |         54 |
++---------+------------+------------+
+3 rows in set (0.02 sec)
+
+mysql> SELECT column_list
+    -> FROM table1
+    -> FULL OUTER JOIN table2 ON table1.column_name = table2.column_name;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'OUTER JOIN table2 ON table1.column_name = table2.column_name' at line 3
+mysql> select customername,contactname,orderid from customers full outer join orders on customers.customerid=orders.customerid;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'outer join orders on customers.customerid=orders.customerid' at line 1
+mysql> select * from  customers left join orders on customers.customerid=orders.customerid union select * from customers right join orders on customers.customerid=orders.customerid;
++------------+--------------+-------------+-----------+---------+------------+------------+
+| customerid | customername | contactname | address   | orderid | customerid | shippingid |
++------------+--------------+-------------+-----------+---------+------------+------------+
+|          2 | rrr          | rajesh      | hyderabad |      11 |          2 |         53 |
+|          1 | ppp          | pranav      | delhi     |      10 |          1 |         50 |
+|          3 | kkk          | karthik     | banglore  |    NULL |       NULL |       NULL |
+|          4 | mmm          | manas       | mumbai    |    NULL |       NULL |       NULL |
+|       NULL | NULL         | NULL        | NULL      |      12 |          8 |         54 |
++------------+--------------+-------------+-----------+---------+------------+------------+
+5 rows in set (0.01 sec)
+
+mysql> select * from customers cross join orders;
++------------+--------------+-------------+-----------+---------+------------+------------+
+| customerid | customername | contactname | address   | orderid | customerid | shippingid |
++------------+--------------+-------------+-----------+---------+------------+------------+
+|          2 | rrr          | rajesh      | hyderabad |      12 |          8 |         54 |
+|          2 | rrr          | rajesh      | hyderabad |      11 |          2 |         53 |
+|          2 | rrr          | rajesh      | hyderabad |      10 |          1 |         50 |
+|          1 | ppp          | pranav      | delhi     |      12 |          8 |         54 |
+|          1 | ppp          | pranav      | delhi     |      11 |          2 |         53 |
+|          1 | ppp          | pranav      | delhi     |      10 |          1 |         50 |
+|          3 | kkk          | karthik     | banglore  |      12 |          8 |         54 |
+|          3 | kkk          | karthik     | banglore  |      11 |          2 |         53 |
+|          3 | kkk          | karthik     | banglore  |      10 |          1 |         50 |
+|          4 | mmm          | manas       | mumbai    |      12 |          8 |         54 |
+|          4 | mmm          | manas       | mumbai    |      11 |          2 |         53 |
+|          4 | mmm          | manas       | mumbai    |      10 |          1 |         50 |
++------------+--------------+-------------+-----------+---------+------------+------------+
+12 rows in set (0.00 sec)
+
+mysql> create table Person(personid int primarykey,firstname varchar(10),gender char(2));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'primarykey,firstname varchar(10),gender char(2))' at line 1
+mysql> create table Person(personid int primarykey,firstname varchar(10),gender varchar(2));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'primarykey,firstname varchar(10),gender varchar(2))' at line 1
+mysql> create table Person(personid int(4),firstname varchar(10),gender varchar(2));
+Query OK, 0 rows affected, 1 warning (0.04 sec)
+
+mysql> create table address(city varchar(10),street varchar(10),personid int(10));
+Query OK, 0 rows affected, 1 warning (0.03 sec)
+
+mysql> insert into Person values(1,"priya","F");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into Person values(2,"manu","F");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into Person values(3,"pratap","M");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into Person values(4,"harika,"F");
+    "> insert into Person values(4,"harika","F");
+    "> ^C
+mysql> insert into Person values(4,"harika","f");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from Person;
++----------+-----------+--------+
+| personid | firstname | gender |
++----------+-----------+--------+
+|        1 | priya     | F      |
+|        2 | manu      | F      |
+|        3 | pratap    | M      |
+|        4 | harika    | f      |
++----------+-----------+--------+
+4 rows in set (0.00 sec)
+
+mysql> insert into address values("hyderabad","lbnagar",1);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into address values("mumbai","gachibowli",2);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into address values("banglore","khajaguda",3);
+Query OK, 1 row affected (0.05 sec)
+
+mysql> select 8 from address;
++---+
+| 8 |
++---+
+| 8 |
+| 8 |
+| 8 |
++---+
+3 rows in set (0.00 sec)
+
+mysql> select * from address;
++-----------+------------+----------+
+| city      | street     | personid |
++-----------+------------+----------+
+| hyderabad | lbnagar    |        1 |
+| mumbai    | gachibowli |        2 |
+| banglore  | khajaguda  |        3 |
++-----------+------------+----------+
+3 rows in set (0.00 sec)
+
+mysql> alter table address add_constraint uniquepersonid UNIQUE(personid);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'add_constraint uniquepersonid UNIQUE(personid)' at line 1
+mysql> delete table address;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'table address' at line 1
+mysql> drop table address;
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> show tables;
++-----------------+
+| Tables_in_joins |
++-----------------+
+| customers       |
+| orders          |
+| person          |
++-----------------+
+3 rows in set (0.00 sec)
+
+mysql> create table address (address id int primary key,street varchar(10),city varchar(10),personid int unique,foreign key(personid) references Person(personid));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'id int primary key,street varchar(10),city varchar(10),personid int unique,forei' at line 1
+mysql> create table address (addressid int primary key,street varchar(10),city varchar(10),personid int unique,foreign key(personid) references Person(personid));
+ERROR 1822 (HY000): Failed to add the foreign key constraint. Missing index for constraint 'address_ibfk_1' in the referenced table 'person'
+mysql> create table address (addressid int primary key,street varchar(10),city varchar(10),personid int unique);
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> insert into address(101,"gachibowli","hyderabad",1);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '101,"gachibowli","hyderabad",1)' at line 1
+mysql> insert into address values(101,"gachibowli","hyderabad",1);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into address values(102,"lbnagar","banglore",2);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into address values(103,"manikonda","mumbai",3);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from address;
++-----------+------------+-----------+----------+
+| addressid | street     | city      | personid |
++-----------+------------+-----------+----------+
+|       101 | gachibowli | hyderabad |        1 |
+|       102 | lbnagar    | banglore  |        2 |
+|       103 | manikonda  | mumbai    |        3 |
++-----------+------------+-----------+----------+
+3 rows in set (0.00 sec)
+
+mysql> insert into address values(103,"manikonda","mumbai",3);
+ERROR 1062 (23000): Duplicate entry '103' for key 'address.PRIMARY'
+mysql> insert into address values(103,"raidurg","mumbai",3);
+ERROR 1062 (23000): Duplicate entry '103' for key 'address.PRIMARY'
+mysql> insert into address values(104,"raidurg","mumbai",3);
+ERROR 1062 (23000): Duplicate entry '3' for key 'address.personid'
+mysql> create table customer(customerid int primarykey,firstname varchar(10),email varchar(10));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'primarykey,firstname varchar(10),email varchar(10))' at line 1
+mysql> create table customer(customerid int primarykey,firstname varchar(10),address varchar(10));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'primarykey,firstname varchar(10),address varchar(10))' at line 1
+mysql> create table customer(customerid int primary key,firstname varchar(10),address varchar(10));
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> insert into customer values(1,"sohail","hyderabad");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into customer values(2,"mukesh","mumbai");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into customer values(3,"meena","banglore");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from customer;
++------------+-----------+-----------+
+| customerid | firstname | address   |
++------------+-----------+-----------+
+|          1 | sohail    | hyderabad |
+|          2 | mukesh    | mumbai    |
+|          3 | meena     | banglore  |
++------------+-----------+-----------+
+3 rows in set (0.00 sec)
+
+mysql> create table orders(customer id int(10),order id int(10),dateofdelivery varchar(10));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'id int(10),order id int(10),dateofdelivery varchar(10))' at line 1
+mysql> create table orders(customer id int(10),order id int(10),amount money);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'id int(10),order id int(10),amount money)' at line 1
+mysql> create table orders(customer id int(10),order id int(10),amount int(16));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'id int(10),order id int(10),amount int(16))' at line 1
+mysql> create table orders(customer id int(10),order id int(10),amount varchar(10));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'id int(10),order id int(10),amount varchar(10))' at line 1
+mysql> create table orders(customer id int(10),order id int(10),place varchar(10));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'id int(10),order id int(10),place varchar(10))' at line 1
+mysql> create table orders(customerid int(10),order id int(10),amount varchar(10));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'order id int(10),amount varchar(10))' at line 1
+mysql> create table orders(customerid int(10),order id int(10),place varchar(10));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'order id int(10),place varchar(10))' at line 1
+mysql> create table orders(customerid int(10),orderid int(10),place varchar(10));
+ERROR 1050 (42S01): Table 'orders' already exists
+mysql> create table orders1(customerid int(10),orderid int(10),place varchar(10));
+Query OK, 0 rows affected, 2 warnings (0.04 sec)
+
+mysql> insert into orders1 values(1,101,"gachibowli");
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into orders1 values(2,102,"khajaguda");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into orders1 values(3,103,"manikonda");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into orders1 values(3,104,"manikonda");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into orders1 values(3,105,"manikonda");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from orders1;
++------------+---------+------------+
+| customerid | orderid | place      |
++------------+---------+------------+
+|          1 |     101 | gachibowli |
+|          2 |     102 | khajaguda  |
+|          3 |     103 | manikonda  |
+|          3 |     104 | manikonda  |
+|          3 |     105 | manikonda  |
++------------+---------+------------+
+5 rows in set (0.00 sec)
+
+mysql> create table student(studentid int(10),name varchar(20),gender varchar(2));
+Query OK, 0 rows affected, 1 warning (0.04 sec)
+
+mysql> insert into student values (1,"pooja","F");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into student values (2,"RAMYA","F");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into student values (2,"sunil","M");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from student;
++-----------+-------+--------+
+| studentid | name  | gender |
++-----------+-------+--------+
+|         1 | pooja | F      |
+|         2 | RAMYA | F      |
+|         2 | sunil | M      |
++-----------+-------+--------+
+3 rows in set (0.00 sec)
+
+mysql> update student set studentid=3 where gender='M';
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from student;
++-----------+-------+--------+
+| studentid | name  | gender |
++-----------+-------+--------+
+|         1 | pooja | F      |
+|         2 | RAMYA | F      |
+|         3 | sunil | M      |
++-----------+-------+--------+
+3 rows in set (0.00 sec)
+
+mysql> create table courses (courseid int(10),studentid int(10),coursename varchar(10
+    -> ));
+Query OK, 0 rows affected, 2 warnings (0.04 sec)
+
+mysql> insert into courses values (101,1,"java");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into courses values (102,1,"python");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into courses values (101,"2","java");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into courses values (103,"2","c");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select *  from courses;
++----------+-----------+------------+
+| courseid | studentid | coursename |
++----------+-----------+------------+
+|      101 |         1 | java       |
+|      102 |         1 | python     |
+|      101 |         2 | java       |
+|      103 |         2 | c          |
++----------+-----------+------------+
+4 rows in set (0.00 sec)
+
+mysql>
